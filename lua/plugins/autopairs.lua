@@ -24,7 +24,6 @@ return {
         highlight_grey = "LineNr"
       },
     })
-    
     -- Integration with nvim-cmp
     local cmp_autopairs = require("nvim-autopairs.completion.cmp")
     local cmp = require("cmp")

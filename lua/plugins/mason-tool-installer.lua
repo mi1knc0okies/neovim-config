@@ -11,9 +11,8 @@ return {
         -- Formatters
         "prettier",
         "black",
-        "isort", 
+        "isort",
         "stylua",
-        
         -- Linters
         "flake8",
         "eslint_d",
