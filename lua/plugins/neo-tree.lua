@@ -8,7 +8,7 @@ return {
   },
   config = function()
     require("neo-tree").setup({
-      close_if_last_window = false,
+      close_if_last_window = true,
       popup_border_style = "rounded",
       enable_git_status = true,
       enable_diagnostics = true,
@@ -105,8 +105,8 @@ return {
       filesystem = {
         filtered_items = {
           visible = false,
-          hide_dotfiles = true,
-          hide_gitignored = true,
+          hide_dotfiles = false,
+          hide_gitignored = false,
           hide_hidden = true,
         },
         follow_current_file = {
@@ -132,7 +132,6 @@ return {
         }
       },
     })
-    
     -- Keymaps
     vim.keymap.set("n", "<leader>ee", "<cmd>Neotree toggle<CR>", { desc = "Toggle file explorer" })
     vim.keymap.set("n", "<leader>ef", "<cmd>Neotree focus<CR>", { desc = "Focus file explorer" })
