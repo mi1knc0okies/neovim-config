@@ -2,9 +2,11 @@
 
 return {
   "windwp/nvim-autopairs",
-  event = "InsertEnter",
+  lazy = false, -- Load on startup
+  dependencies = { "hrsh7th/nvim-cmp" },
   config = function()
-    require("nvim-autopairs").setup({
+    local npairs = require("nvim-autopairs")
+    npairs.setup({
       check_ts = true,
       ts_config = {
         lua = { "string", "source" },
@@ -24,12 +26,16 @@ return {
         highlight_grey = "LineNr"
       },
     })
-    -- Integration with nvim-cmp
-    local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-    local cmp = require("cmp")
-    cmp.event:on(
-      "confirm_done",
-      cmp_autopairs.on_confirm_done()
-    )
+
+    -- Make sure cmp is available before trying to configure it
+    local has_cmp, cmp = pcall(require, "cmp")
+    if has_cmp then
+      -- Integration with nvim-cmp
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      cmp.event:on(
+        "confirm_done",
+        cmp_autopairs.on_confirm_done()
+      )
+    end
   end,
 }

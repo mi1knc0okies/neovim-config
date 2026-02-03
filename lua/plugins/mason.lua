@@ -30,7 +30,7 @@ return {
 			ensure_installed = {
 				"lua_ls",
 				"pyright",
-				"ts_ls",
+				"ts_ls", -- Updated from tsserver
 				"zls",
 				"jsonls",
 				"yamlls",
@@ -58,11 +58,8 @@ return {
 			run_on_start = true,
 		})
 
-		-- LSP configuration
-		local lspconfig = require("lspconfig")
-		local cmp_nvim_lsp = require("cmp_nvim_lsp")
-
-		local capabilities = cmp_nvim_lsp.default_capabilities()
+		-- Define capabilities
+		local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 		-- Define on_attach function
 		local on_attach = function(client, bufnr)
@@ -102,7 +99,7 @@ return {
 				},
 			},
 			pyright = {},
-			ts_ls = {},
+			ts_ls = {},  -- Updated from tsserver
 			zls = {},
 			jsonls = {},
 			yamlls = {},
@@ -112,11 +109,19 @@ return {
 			tailwindcss = {},
 		}
 
-		-- Setup each server
-		for server, config in pairs(servers) do
+				-- Setup each server using the new vim.lsp.config API (Neovim 0.11+)
+		for server_name, config in pairs(servers) do
+			-- Add capabilities and on_attach to the config
 			config.capabilities = capabilities
 			config.on_attach = on_attach
-			lspconfig[server].setup(config)
+			
+			-- Use the new vim.lsp.config API
+			vim.lsp.config(server_name, config)
+		end
+		
+		-- Enable the configured LSP servers
+		for server_name, _ in pairs(servers) do
+			vim.lsp.enable(server_name)
 		end
 
 		-- Completion setup
@@ -219,13 +224,10 @@ return {
 		local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
 		for type, icon in pairs(signs) do
 			local hl = "DiagnosticSign" .. type
-			vim.diagnostic.config({
-				signs = {
-					active = icon,
-					text = { icon },
-					texthl = { hl },
-					numhl = { "" },
-				},
+			vim.fn.sign_define(hl, {
+				text = icon,
+				texthl = hl,
+				numhl = "",
 			})
 		end
 	end,
